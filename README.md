@@ -5,6 +5,12 @@ A modern, production-quality personal finance dashboard for tracking income, exp
 
 Finora runs entirely in the browser. Every figure on screen is calculated from your real transaction data, and everything is stored locally in your browser. No backend, no account, no tracking.
 
+## Live Demo
+
+🌐 [nayra-singh.github.io/finora](https://nayra-singh.github.io/finora/)
+
+The live site is built from the `main` branch and deployed to GitHub Pages. On first visit it seeds realistic demo data so every page and chart looks alive; use **Settings → Data → Reset** to clear it and start fresh.
+
 ## Features
 
 - **Dashboard** — a financial overview with total balance, income, expenses and savings, plus a month selector, spending chart (week / month / year), expense breakdown donut, budget and savings-goal widgets.
