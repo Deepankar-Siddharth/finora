@@ -1,0 +1,154 @@
+@import '@fontsource-variable/inter';
+@import 'tailwindcss';
+
+/* Class-based dark mode for Tailwind v4. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-muted: var(--ink-muted);
+
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+}
+
+/* ---- Semantic tokens: light ---- */
+:root {
+  --canvas: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f1f3f5;
+  --surface-3: #e9ecf0;
+  --border: #e4e7ec;
+  --border-strong: #d0d5dd;
+
+  --ink: #101828;
+  --ink-soft: #475467;
+  --ink-muted: #98a2b3;
+
+  --brand: #4f46e5;
+  --brand-soft: #eef2ff;
+  --success: #059669;
+  --success-soft: #ecfdf5;
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  --warning: #b45309;
+  --warning-soft: #fffbeb;
+  --info: #2563eb;
+  --info-soft: #eff6ff;
+
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+  --shadow-pop: 0 4px 6px -2px rgba(16, 24, 40, 0.05),
+    0 12px 24px -4px rgba(16, 24, 40, 0.1);
+  color-scheme: light;
+}
+
+/* ---- Semantic tokens: dark ---- */
+.dark {
+  --canvas: #0b0e14;
+  --surface: #12161f;
+  --surface-2: #171c27;
+  --surface-3: #1e2433;
+  --border: #232a3a;
+  --border-strong: #2f3a52;
+
+  --ink: #eef1f6;
+  --ink-soft: #a3adc2;
+  --ink-muted: #5f6b84;
+
+  --brand: #818cf8;
+  --brand-soft: #1e2749;
+  --success: #34d399;
+  --success-soft: #0d2b23;
+  --danger: #f87171;
+  --danger-soft: #36151a;
+  --warning: #fbbf24;
+  --warning-soft: #33270b;
+  --info: #60a5fa;
+  --info-soft: #122442;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--brand) 25%, transparent);
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 8px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Recharts theming helpers */
+  .recharts-default-tooltip {
+    border-radius: 12px !important;
+    border: 1px solid var(--border) !important;
+    background: var(--surface) !important;
+    box-shadow: var(--shadow-pop) !important;
+    padding: 10px 12px !important;
+  }
+  .recharts-cartesian-axis-tick-value {
+    font-size: 11px;
+    fill: var(--ink-muted) !important;
+  }
+  .recharts-cartesian-grid line {
+    stroke: var(--border) !important;
+  }
+  .recharts-legend-item-text {
+    color: var(--ink-soft) !important;
+  }
+}
