@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   // Relative base so assets resolve correctly when deployed to a
-  // GitHub Pages sub-path (e.g. https://nayra-singh.github.io/finora/).
+  // GitHub Pages sub-path (e.g. https://deepankar-siddharth.github.io/finora/).
   base: './',
   build: {
     // Split third-party libraries into dedicated chunks for faster loads.

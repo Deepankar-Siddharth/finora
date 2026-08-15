@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { FinanceProvider } from './context/FinanceProvider'
 import { ToastProvider } from './components/ui/Toast'
+import { AuthProvider } from './context/AuthProvider'
+import { AuthGate } from './auth/AuthGate'
 import { AppShell } from './components/layout/AppShell'
 import { Dashboard } from './pages/Dashboard'
 import { Transactions } from './pages/Transactions'
@@ -21,22 +23,26 @@ function ScrollToTop() {
 export default function App() {
   return (
     <HashRouter>
-      <FinanceProvider>
-        <ToastProvider>
-          <ScrollToTop />
-          <Routes>
-            <Route element={<AppShell />}>
-              <Route index element={<Dashboard />} />
-              <Route path="transactions" element={<Transactions />} />
-              <Route path="budgets" element={<Budgets />} />
-              <Route path="analytics" element={<Analytics />} />
-              <Route path="recurring" element={<Recurring />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Route>
-          </Routes>
-        </ToastProvider>
-      </FinanceProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <FinanceProvider>
+            <AuthGate>
+              <ScrollToTop />
+              <Routes>
+                <Route element={<AppShell />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="transactions" element={<Transactions />} />
+                  <Route path="budgets" element={<Budgets />} />
+                  <Route path="analytics" element={<Analytics />} />
+                  <Route path="recurring" element={<Recurring />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Route>
+              </Routes>
+            </AuthGate>
+          </FinanceProvider>
+        </AuthProvider>
+      </ToastProvider>
     </HashRouter>
   )
 }

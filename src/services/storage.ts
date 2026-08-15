@@ -7,7 +7,6 @@ import type {
   UserSettings,
 } from '../types'
 import { DEFAULT_SETTINGS } from '../constants'
-import { createDemoData } from '../data/demoData'
 
 const STORAGE_KEYS = {
   transactions: 'finora_transactions',
@@ -16,6 +15,15 @@ const STORAGE_KEYS = {
   recurring: 'finora_recurring',
   settings: 'finora_settings',
 } as const
+
+/** PIN lock data is stored separately so data resets never clear it. */
+const AUTH_KEY = 'finora_auth'
+
+export interface StoredAuth {
+  enabled: boolean
+  salt?: string
+  hash?: string
+}
 
 const STORAGE_VERSION = 1
 
@@ -99,13 +107,19 @@ const isSettings = (value: unknown): value is UserSettings =>
   typeof value.monthlyIncomeTarget === 'number' &&
   (value.theme === 'light' || value.theme === 'dark' || value.theme === 'system')
 
+const isAuth = (value: unknown): value is StoredAuth =>
+  isObject(value) &&
+  typeof value.enabled === 'boolean' &&
+  (!value.enabled ||
+    (typeof value.salt === 'string' && typeof value.hash === 'string'))
+
 // ---- Public API ---------------------------------------------------------
 
 export const storageService = {
   /**
-   * Load all slices. Missing, corrupt, or invalid data falls back to the
-   * corresponding value; when the user has no data at all, demo data is
-   * seeded so the dashboard is meaningful on first launch.
+   * Load all slices. Missing, corrupt, or invalid data falls back to safe
+   * defaults. The app starts empty — real transactions are entered by the
+   * user (or imported from CSV).
    */
   load(): FinanceData {
     const transactions = loadSlice(STORAGE_KEYS.transactions, isArrayOf(isTransaction))
@@ -113,12 +127,6 @@ export const storageService = {
     const goals = loadSlice(STORAGE_KEYS.goals, isArrayOf(isGoal))
     const recurring = loadSlice(STORAGE_KEYS.recurring, isArrayOf(isRecurring))
     const settings = loadSlice(STORAGE_KEYS.settings, isSettings)
-
-    if (!transactions && !budgets && !goals && !recurring && !settings) {
-      const demo = createDemoData()
-      this.save(demo)
-      return demo
-    }
 
     return {
       transactions: transactions ?? [],
@@ -137,12 +145,22 @@ export const storageService = {
     saveSlice(STORAGE_KEYS.settings, data.settings)
   },
 
-  /** Remove every stored slice (used by "Reset all data"). */
+  /** Remove every stored slice (used by "Reset all data"). Keeps the PIN. */
   clear(): void {
     try {
       Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key))
     } catch {
       // Ignore storage errors during reset.
     }
+  },
+
+  // ---- PIN auth ----------------------------------------------------------
+
+  loadAuth(): StoredAuth | null {
+    return loadSlice(AUTH_KEY, isAuth)
+  },
+
+  saveAuth(auth: StoredAuth): void {
+    saveSlice(AUTH_KEY, auth)
   },
 }

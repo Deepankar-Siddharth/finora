@@ -3,13 +3,13 @@
 
 A modern, production-quality personal finance dashboard for tracking income, expenses, budgets, savings goals and recurring transactions — built with React, TypeScript and Tailwind CSS.
 
-Finora runs entirely in the browser. Every figure on screen is calculated from your real transaction data, and everything is stored locally in your browser. No backend, no account, no tracking.
+Finora runs entirely in the browser. It is protected by a personal PIN, every figure on screen is calculated from your real transaction data, and everything is stored locally in your browser. No backend, no account, no tracking.
 
 ## Live Demo
 
-🌐 [nayra-singh.github.io/finora](https://nayra-singh.github.io/finora/)
+🌐 [deepankar-siddharth.github.io/finora](https://deepankar-siddharth.github.io/finora/)
 
-The live site is built from the `main` branch and deployed to GitHub Pages. On first visit it seeds realistic demo data so every page and chart looks alive; use **Settings → Data → Reset** to clear it and start fresh.
+The live site is built from the `main` branch and deployed to GitHub Pages. On first visit you set a PIN to unlock the app; you start with an empty dashboard and add your real transactions from scratch (or import them from CSV).
 
 ## Features
 
@@ -21,8 +21,9 @@ The live site is built from the `main` branch and deployed to GitHub Pages. On f
 - **Recurring Transactions** — daily, weekly, monthly or yearly schedules. Generate an occurrence to create a real transaction and advance the next date automatically.
 - **Global Search** — command-style search (Ctrl+K) across descriptions, categories, payment methods and notes, with keyboard navigation.
 - **Data Controls** — export transactions to CSV, import a previously exported CSV with per-row validation, and reset all data (with typed confirmation).
+- **PIN Lock** — protect the app with a 4–6 digit PIN. It locks every time you open Finora and after using **Lock now**, with a 5-attempt cooldown. The PIN is stored only as a salted SHA-256 hash on your device.
 - **Themes** — light, dark and system mode with no flash of the wrong theme on load.
-- **Local Persistence** — everything is saved to `localStorage`; realistic demo data seeds your first visit and is never overwritten once you have data.
+- **Local Persistence** — everything is saved to `localStorage`; you start with an empty dashboard and build up your own real data.
 - **Fully Responsive** — desktop, tablet and mobile layouts with an accessible mobile drawer navigation.
 
 ## Screenshots
@@ -56,7 +57,7 @@ npm install
 npm run dev
 ```
 
-Open the printed local URL (usually `http://localhost:5173`). On first launch Finora seeds realistic demo data so every page and chart looks alive; use **Settings → Data → Reset** to clear it and start fresh.
+Open the printed local URL (usually `http://localhost:5173`). On first launch Finora asks you to create a 4–6 digit PIN, then opens an empty dashboard — add your real transactions from scratch or use **Settings → Data → Import CSV** to load them from a file.
 
 ## Development
 
@@ -95,7 +96,7 @@ npm run build
 
 ## Data Privacy
 
-Finora is a local-first application. Your financial data is stored **only** in your browser's `localStorage` under keys prefixed with `finora_` (for example `finora_transactions`). Nothing is ever uploaded, transmitted or sold — there is no backend and no analytics. Clearing your browser data removes Finora's data; use **Settings → Data → Export CSV** first if you want a backup.
+Finora is a local-first application. Your financial data is stored **only** in your browser's `localStorage` under keys prefixed with `finora_` (for example `finora_transactions`). Your PIN is stored separately under `finora_auth` as a salted SHA-256 hash — the PIN itself is never saved or sent anywhere. Nothing is ever uploaded, transmitted or sold — there is no backend and no analytics. Clearing your browser data removes Finora's data; use **Settings → Data → Export CSV** first if you want a backup.
 
 ## Project Structure
 
@@ -110,13 +111,13 @@ src/
 │   ├── goals/        # GoalCard, GoalFormModal
 │   ├── recurring/    # RecurringCard, RecurringFormModal
 │   ├── analytics/    # HealthScoreCard, TrendChart, CategorySpending, ...
-│   └── settings/     # ProfileSection, AppearanceSection, DataSection
+│   └── settings/     # Profile, Appearance, Security, Data sections
+├── auth/             # AuthGate, SetPinScreen, UnlockScreen, PinField
 ├── pages/            # Dashboard, Transactions, Budgets, Analytics, Recurring, Settings
-├── context/          # FinanceContext, FinanceProvider, ToastContext
-├── services/         # storage.ts (localStorage layer)
-├── data/             # demoData.ts
+├── context/          # Finance + Auth contexts and providers, ToastContext
+├── services/         # storage.ts (localStorage layer + PIN auth)
 ├── types/            # domain types + filter types
-├── utils/            # currency, dates, transactions, budgets, analytics, csv
+├── utils/            # currency, dates, transactions, budgets, analytics, csv, pin
 ├── constants/        # categories, nav, currencies
 ├── App.tsx
 └── main.tsx
