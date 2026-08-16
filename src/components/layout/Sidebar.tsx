@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { CircleHelp, LogIn, Wallet } from 'lucide-react'
-import { NAV_ITEMS, APP_NAME } from '../../constants'
+import { NAV_ITEMS, APP_NAME, SYNC_STATUS_META } from '../../constants'
 import { useFinance } from '../../context/FinanceContext'
 import { ThemeToggle } from './ThemeToggle'
 import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
+import { Badge } from '../ui/Badge'
 
 interface SidebarProps {
   onNavigate?: () => void
@@ -22,7 +23,7 @@ function getInitials(name: string): string {
 }
 
 export function Sidebar({ onNavigate }: SidebarProps) {
-  const { settings } = useFinance()
+  const { settings, syncStatus, syncNow } = useFinance()
   const [helpOpen, setHelpOpen] = useState(false)
 
   return (
@@ -63,6 +64,23 @@ export function Sidebar({ onNavigate }: SidebarProps) {
 
       {/* Footer */}
       <div className="border-t border-border p-3">
+        {syncStatus !== 'disabled' && (
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={syncNow}
+              disabled={syncStatus === 'syncing'}
+              title={syncStatus === 'syncing' ? 'Syncing…' : 'Sync now'}
+              className="flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors hover:bg-surface-2"
+            >
+              <Badge tone={SYNC_STATUS_META[syncStatus].tone}>
+                <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+                {SYNC_STATUS_META[syncStatus].label}
+              </Badge>
+            </button>
+          </div>
+        )}
+
         <div className="mb-2 flex items-center gap-2">
           <button
             type="button"

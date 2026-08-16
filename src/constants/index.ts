@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react'
 import { Wallet, PlusCircle, PiggyBank, BarChart3, Repeat, Settings } from 'lucide-react'
+import type { SyncStatus } from '../types'
 
 export interface NavItem {
   path: string
@@ -33,3 +34,14 @@ export const CURRENCIES = [
   { code: 'GBP', symbol: '£', label: 'British Pound' },
   { code: 'AED', symbol: 'د.إ', label: 'UAE Dirham' },
 ] as const
+
+export type SyncStatusTone = 'neutral' | 'success' | 'warning' | 'danger' | 'info'
+
+export const SYNC_STATUS_META: Record<SyncStatus, { label: string; tone: SyncStatusTone }> = {
+  disabled: { label: 'Not connected', tone: 'neutral' },
+  idle: { label: 'Connected', tone: 'info' },
+  syncing: { label: 'Syncing…', tone: 'info' },
+  synced: { label: 'Synced', tone: 'success' },
+  offline: { label: 'Offline', tone: 'warning' },
+  error: { label: 'Sync error', tone: 'danger' },
+}

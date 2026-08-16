@@ -4,6 +4,7 @@ import type {
   FinanceData,
   RecurringTransaction,
   SavingsGoal,
+  SyncStatus,
   Transaction,
   UserSettings,
 } from '../types'
@@ -50,6 +51,12 @@ export interface FinanceContextValue {
   importTransactions: (txs: Transaction[]) => void
   updateSettings: (patch: Partial<UserSettings>) => void
   resetAll: () => void
+  syncStatus: SyncStatus
+  lastSyncedAt: string | undefined
+  syncError: string | undefined
+  connectSync: (token: string, passphrase: string) => Promise<void>
+  disconnectSync: () => void
+  syncNow: () => void
 }
 
 export const FinanceContext = createContext<FinanceContextValue | null>(null)
