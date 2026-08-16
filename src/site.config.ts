@@ -9,4 +9,4 @@
  * part of the published app, so anyone who inspects the source could find it.
  * Do not use it to protect anything that needs real security.
  */
-export const SITE_SECRET = '2468'
+export const SITE_SECRET = '3566'
