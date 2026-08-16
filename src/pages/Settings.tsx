@@ -10,7 +10,6 @@ import { Input } from '../components/ui/Input'
 import { ProfileSection } from '../components/settings/ProfileSection'
 import { AppearanceSection } from '../components/settings/AppearanceSection'
 import { DataSection } from '../components/settings/DataSection'
-import { SecuritySection } from '../components/settings/SecuritySection'
 import { ALL_CATEGORIES } from '../constants/categories'
 import { generateCSV, parseCSVToTransactions, summarizeImport } from '../utils/csv'
 import { todayISO } from '../utils/dates'
@@ -70,7 +69,6 @@ export function Settings() {
 
       <ProfileSection />
       <AppearanceSection />
-      <SecuritySection />
       <DataSection
         onExport={handleExport}
         onImport={handleImport}

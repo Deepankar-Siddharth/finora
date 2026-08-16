@@ -16,15 +16,6 @@ const STORAGE_KEYS = {
   settings: 'finora_settings',
 } as const
 
-/** PIN lock data is stored separately so data resets never clear it. */
-const AUTH_KEY = 'finora_auth'
-
-export interface StoredAuth {
-  enabled: boolean
-  salt?: string
-  hash?: string
-}
-
 const STORAGE_VERSION = 1
 
 interface Envelope<T> {
@@ -107,12 +98,6 @@ const isSettings = (value: unknown): value is UserSettings =>
   typeof value.monthlyIncomeTarget === 'number' &&
   (value.theme === 'light' || value.theme === 'dark' || value.theme === 'system')
 
-const isAuth = (value: unknown): value is StoredAuth =>
-  isObject(value) &&
-  typeof value.enabled === 'boolean' &&
-  (!value.enabled ||
-    (typeof value.salt === 'string' && typeof value.hash === 'string'))
-
 // ---- Public API ---------------------------------------------------------
 
 export const storageService = {
@@ -145,22 +130,12 @@ export const storageService = {
     saveSlice(STORAGE_KEYS.settings, data.settings)
   },
 
-  /** Remove every stored slice (used by "Reset all data"). Keeps the PIN. */
+  /** Remove every stored slice (used by "Reset all data"). */
   clear(): void {
     try {
       Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key))
     } catch {
       // Ignore storage errors during reset.
     }
-  },
-
-  // ---- PIN auth ----------------------------------------------------------
-
-  loadAuth(): StoredAuth | null {
-    return loadSlice(AUTH_KEY, isAuth)
-  },
-
-  saveAuth(auth: StoredAuth): void {
-    saveSlice(AUTH_KEY, auth)
   },
 }

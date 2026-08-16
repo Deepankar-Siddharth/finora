@@ -1,13 +1,10 @@
-import type { ReactNode } from 'react'
-import { useAuth } from '../context/AuthContext'
-import { SetPinScreen } from './SetPinScreen'
+import { useState, type ReactNode } from 'react'
 import { UnlockScreen } from './UnlockScreen'
 
-/** Gates the whole app behind the PIN lock. */
+/** Locks the whole app behind the static site secret until it is entered. */
 export function AuthGate({ children }: { children: ReactNode }) {
-  const { status } = useAuth()
+  const [unlocked, setUnlocked] = useState(false)
 
-  if (status === 'setup') return <SetPinScreen />
-  if (status === 'locked') return <UnlockScreen />
+  if (!unlocked) return <UnlockScreen onUnlock={() => setUnlocked(true)} />
   return <>{children}</>
 }

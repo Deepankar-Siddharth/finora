@@ -1,8 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Lock, Menu } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import { NAV_ITEMS } from '../../constants'
 import { useFinance } from '../../context/FinanceContext'
-import { useAuth } from '../../context/AuthContext'
 import { GlobalSearch } from './GlobalSearch'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -22,7 +21,6 @@ function getInitials(name: string): string {
 
 export function Header({ onOpenMobileNav }: HeaderProps) {
   const { settings } = useFinance()
-  const { pinEnabled, lock } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -51,17 +49,6 @@ export function Header({ onOpenMobileNav }: HeaderProps) {
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        {pinEnabled && (
-          <button
-            type="button"
-            onClick={lock}
-            aria-label="Lock Finora"
-            title="Lock Finora"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border text-ink-soft transition-colors hover:bg-surface-2 hover:text-ink"
-          >
-            <Lock className="h-4.5 w-4.5" aria-hidden="true" />
-          </button>
-        )}
         <ThemeToggle />
         <button
           type="button"
