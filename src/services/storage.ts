@@ -5,8 +5,8 @@ import type {
   SavingsGoal,
   Transaction,
   UserSettings,
-} from '../types'
-import { DEFAULT_SETTINGS } from '../constants'
+} from '../types/index.ts'
+import { DEFAULT_SETTINGS } from '../constants/index.ts'
 
 const STORAGE_KEYS = {
   transactions: 'finora_transactions',
@@ -136,6 +136,15 @@ export const storageService = {
       Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key))
     } catch {
       // Ignore storage errors during reset.
+    }
+  },
+
+  /** True when any financial slice exists in the browser (used for migration). */
+  hasData(): boolean {
+    try {
+      return Object.values(STORAGE_KEYS).some((key) => localStorage.getItem(key) !== null)
+    } catch {
+      return false
     }
   },
 }

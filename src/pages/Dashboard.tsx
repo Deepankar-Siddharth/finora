@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Plus } from 'lucide-react'
 import { useFinance } from '../context/FinanceContext'
+import { useAuth } from '../auth/AuthContext'
 import { Button } from '../components/ui/Button'
 import { MonthSelector } from '../components/dashboard/MonthSelector'
 import { SummaryCards } from '../components/dashboard/SummaryCards'
@@ -21,10 +22,14 @@ function greeting(): string {
 
 export function Dashboard() {
   const { settings } = useFinance()
+  const { profile } = useAuth()
   const [selectedMonth, setSelectedMonth] = useState(currentMonthKey())
   const [formOpen, setFormOpen] = useState(false)
 
-  const heading = useMemo(() => `${greeting()}, ${settings.name || 'there'}`, [settings.name])
+  const heading = useMemo(
+    () => `${greeting()}, ${profile?.name || settings.name || 'there'}`,
+    [profile?.name, settings.name],
+  )
 
   return (
     <div className="space-y-6">

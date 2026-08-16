@@ -3,13 +3,13 @@
 
 A modern, production-quality personal finance dashboard for tracking income, expenses, budgets, savings goals and recurring transactions — built with React, TypeScript and Tailwind CSS.
 
-Finora runs entirely in the browser. Every visit is protected by a secret number, every figure on screen is calculated from your real transaction data, and everything is stored locally in your browser. No backend, no account, no tracking.
+Finora runs entirely in the browser. Your profile is protected by a PIN you create on this device, every figure on screen is calculated from your real transaction data, and everything is stored locally in your browser. No backend, no account, no tracking.
 
 ## Live Demo
 
 🌐 [deepankar-siddharth.github.io/finora](https://deepankar-siddharth.github.io/finora/)
 
-The live site is built from the `main` branch and deployed to GitHub Pages. Every visitor must enter the site's secret number to open the app. You start with an empty dashboard and add your real transactions from scratch (or import them from CSV).
+The live site is built from the `main` branch and deployed to GitHub Pages. The first time you visit, you create a local profile with a name and a 4–6 digit PIN. From then on, you unlock Finora with that PIN. You start with an empty dashboard and add your real transactions from scratch (or import them from CSV).
 
 ## Features
 
@@ -20,9 +20,10 @@ The live site is built from the `main` branch and deployed to GitHub Pages. Ever
 - **Analytics** — income, expense and savings trends over 12 months, category analysis, savings rate and an estimated financial-health score (clearly labelled as informational, not advice).
 - **Recurring Transactions** — daily, weekly, monthly or yearly schedules. Generate an occurrence to create a real transaction and advance the next date automatically.
 - **Global Search** — command-style search (Ctrl+K) across descriptions, categories, payment methods and notes, with keyboard navigation.
-- **Data Controls** — export transactions to CSV, import a previously exported CSV with per-row validation, and reset all data (with typed confirmation).
-- **Secret-number gate** — a static 4–6 digit secret is required on every visit, so the same number works from any device. A 5-attempt cooling period blocks guessing.
+- **Data Controls** — export transactions to CSV, import a previously exported CSV with per-row validation, and delete all local data (with typed confirmation).
+- **Local PIN login** — create a profile with a name and a 4–6 digit PIN on first run. Your PIN is never stored — only a PBKDF2-SHA-256 verifier is kept in the browser — so unlocking Finora never requires a server or the internet. Lock Finora anytime, change your name or PIN in Settings, and restore your data if you delete everything.
 - **Themes** — light, dark and system mode with no flash of the wrong theme on load.
+- **Optional encrypted sync** — connect your own GitHub repository in Settings to sync your data across devices. Your data is encrypted with a passphrase before it leaves your browser, and sync stays fully disabled by default — Finora makes no network requests unless you enable it.
 - **Local Persistence** — everything is saved to `localStorage`; you start with an empty dashboard and build up your own real data.
 - **Fully Responsive** — desktop, tablet and mobile layouts with an accessible mobile drawer navigation.
 
@@ -57,7 +58,7 @@ npm install
 npm run dev
 ```
 
-Open the printed local URL (usually `http://localhost:5173`). Every visit asks for the site secret number, then opens an empty dashboard — add your real transactions from scratch or use **Settings → Data → Import CSV** to load them from a file.
+Open the printed local URL (usually `http://localhost:5173`). On your first visit, create a profile with a name and PIN, then add your real transactions from scratch or use **Settings → Data → Import CSV** to load them from a file. Later visits unlock Finora with your PIN.
 
 ## Development
 
@@ -96,7 +97,7 @@ npm run build
 
 ## Data Privacy
 
-Finora is a local-first application. Your financial data is stored **only** in your browser's `localStorage` under keys prefixed with `finora_` (for example `finora_transactions`). The site secret is a fixed value — anyone who inspects the published code could find it, so use it only as a casual personal gate, not for anything that needs real security. Nothing is ever uploaded, transmitted or sold — there is no backend and no analytics. Clearing your browser data removes Finora's data; use **Settings → Data → Export CSV** first if you want a backup.
+Finora is a local-first application. Your financial data is stored **only** in your browser's `localStorage` under keys prefixed with `finora_` (for example `finora_transactions`). The PIN you choose is never stored in plain text — only a PBKDF2-SHA-256 verifier with a random salt is saved, so Finora can check your PIN without ever persisting it. Nothing is ever uploaded, transmitted or sold — there is no backend and no analytics. Clearing your browser data removes Finora's data; use **Settings → Data → Export CSV** first if you want a backup.
 
 ## Project Structure
 
@@ -112,7 +113,7 @@ src/
 │   ├── recurring/    # RecurringCard, RecurringFormModal
 │   ├── analytics/    # HealthScoreCard, TrendChart, CategorySpending, ...
 │   └── settings/     # Profile, Appearance, Data sections
-├── auth/             # AuthGate, UnlockScreen, PinField
+├── auth/             # AuthProvider + AuthGate, OnboardingScreen, LoginScreen, PinField
 ├── pages/            # Dashboard, Transactions, Budgets, Analytics, Recurring, Settings
 ├── context/          # Finance context + provider, ToastContext
 ├── services/         # storage.ts (localStorage layer)

@@ -126,10 +126,10 @@ export function DataSection({ onExport, onImport, onReset, importResult, onClose
       <div className="mt-6 rounded-xl border border-danger/25 bg-danger-soft/60 p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-medium text-danger">Reset all data</p>
+            <p className="text-sm font-medium text-danger">Delete all data</p>
             <p className="mt-0.5 text-xs text-danger/90">
-              Permanently removes every transaction, budget, goal and recurring schedule stored in
-              this browser.
+              Permanently removes every transaction, budget, goal and recurring schedule, your sync
+              connection and your local profile from this browser. This cannot be undone.
             </p>
           </div>
           <button
@@ -137,7 +137,7 @@ export function DataSection({ onExport, onImport, onReset, importResult, onClose
             onClick={onReset}
             className="inline-flex shrink-0 items-center justify-center rounded-lg border border-danger/40 px-4 py-2 text-sm font-medium text-danger transition-colors hover:bg-danger hover:text-white"
           >
-            Reset data
+            Delete all data
           </button>
         </div>
       </div>

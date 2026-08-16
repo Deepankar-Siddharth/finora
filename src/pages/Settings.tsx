@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import type { ImportResult } from '../types'
 import { useFinance } from '../context/FinanceContext'
+import { useAuth } from '../auth/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { PageHeader } from '../components/ui/PageHeader'
 import { Modal } from '../components/ui/Modal'
@@ -18,7 +19,8 @@ import { todayISO } from '../utils/dates'
 const VALID_CATEGORIES = new Set(ALL_CATEGORIES.map((c) => c.name))
 
 export function Settings() {
-  const { transactions, importTransactions, resetAll } = useFinance()
+  const { transactions, importTransactions } = useFinance()
+  const { deleteAllLocalData } = useAuth()
   const { toast } = useToast()
 
   const [importResult, setImportResult] = useState<ImportResult | null>(null)
@@ -57,11 +59,8 @@ export function Settings() {
   }
 
   function handleReset() {
-    if (resetConfirmation.trim().toUpperCase() !== 'RESET') return
-    resetAll()
-    setResetDialogOpen(false)
-    setResetConfirmation('')
-    toast('All data has been reset.')
+    if (resetConfirmation.trim().toUpperCase() !== 'DELETE') return
+    deleteAllLocalData()
   }
 
   return (
@@ -85,8 +84,8 @@ export function Settings() {
       <Modal
         open={resetDialogOpen}
         onClose={() => setResetDialogOpen(false)}
-        title="Are you sure?"
-        description="This will permanently remove all locally stored financial data."
+        title="Delete all Finora data?"
+        description="This cannot be undone."
         size="sm"
         footer={
           <>
@@ -95,7 +94,7 @@ export function Settings() {
             </Button>
             <Button
               variant="danger"
-              disabled={resetConfirmation.trim().toUpperCase() !== 'RESET'}
+              disabled={resetConfirmation.trim().toUpperCase() !== 'DELETE'}
               onClick={handleReset}
             >
               Delete everything
@@ -109,12 +108,13 @@ export function Settings() {
           </span>
           <div className="flex-1">
             <p className="mb-3 text-sm leading-relaxed text-ink-soft">
-              This deletes your transactions, budgets, savings goals and recurring schedules. Your
-              profile and theme settings are kept. This cannot be undone.
+              This permanently deletes your transactions, budgets, savings goals, recurring
+              schedules, sync connection and your local profile. You will be signed out and Finora
+              will start as new on this device.
             </p>
             <Input
-              label="Type RESET to confirm"
-              placeholder="RESET"
+              label="Type DELETE to confirm"
+              placeholder="DELETE"
               value={resetConfirmation}
               onChange={(e) => setResetConfirmation(e.target.value)}
             />

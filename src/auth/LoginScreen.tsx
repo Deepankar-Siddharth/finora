@@ -1,15 +1,17 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Wallet } from 'lucide-react'
-import { SITE_SECRET } from '../site.config'
-import { Button } from '../components/ui/Button'
+import { useAuth } from './AuthContext'
 import { PinField } from './PinField'
+import { Button } from '../components/ui/Button'
 
 const MAX_ATTEMPTS = 5
 const LOCKOUT_MS = 30_000
 
-/** Entry gate: a static secret number shown on every visit opens Finora. */
-export function UnlockScreen({ onUnlock }: { onUnlock: () => void }) {
-  const [secret, setSecret] = useState('')
+/** Sign in with the PIN created during onboarding. */
+export function LoginScreen() {
+  const { profile, unlock } = useAuth()
+
+  const [pin, setPin] = useState('')
   const [error, setError] = useState('')
   const [attempts, setAttempts] = useState(0)
   const [lockUntil, setLockUntil] = useState(0)
@@ -24,23 +26,24 @@ export function UnlockScreen({ onUnlock }: { onUnlock: () => void }) {
     return () => clearInterval(id)
   }, [lockedOut, lockUntil])
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     if (lockedOut) return
-    if (secret === SITE_SECRET) {
-      onUnlock()
-      return
-    }
+
+    const ok = await unlock(pin)
+    if (ok) return
+
+    setPin('')
     const next = attempts + 1
     setAttempts(next)
-    setSecret('')
+    setError(
+      next >= MAX_ATTEMPTS
+        ? 'Too many attempts. Try again in a few moments.'
+        : 'Incorrect PIN. Please try again.',
+    )
     if (next >= MAX_ATTEMPTS) {
-      setError('Too many attempts.')
       setLockUntil(Date.now() + LOCKOUT_MS)
       setAttempts(0)
-    } else {
-      const left = MAX_ATTEMPTS - next
-      setError(`Incorrect secret. ${left} attempt${left === 1 ? '' : 's'} left.`)
     }
   }
 
@@ -51,14 +54,22 @@ export function UnlockScreen({ onUnlock }: { onUnlock: () => void }) {
           <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-white shadow-lg shadow-brand/25">
             <Wallet className="h-7 w-7" aria-hidden="true" />
           </span>
-          <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink">Finora</h1>
-          <p className="mt-2 text-sm text-ink-muted">Enter the secret number to open Finora.</p>
+          <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink">
+            Welcome back, {profile?.name || 'Finora'}
+          </h1>
+          <p className="mt-2 text-sm text-ink-muted">Enter your PIN to open Finora.</p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate className="space-y-4">
-          <PinField label="Secret number" value={secret} onChange={setSecret} error={error} autoFocus />
-          <Button type="submit" size="lg" fullWidth disabled={lockedOut} className="mt-2">
-            {lockedOut ? `Try again in ${remaining}s` : 'Open Finora'}
+          <PinField
+            label="Enter your PIN"
+            value={pin}
+            onChange={setPin}
+            error={error}
+            autoFocus
+          />
+          <Button type="submit" size="lg" fullWidth disabled={lockedOut}>
+            {lockedOut ? `Try again in ${remaining}s` : 'Unlock Finora'}
           </Button>
         </form>
       </div>

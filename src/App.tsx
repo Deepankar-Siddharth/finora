@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { AuthProvider } from './auth/AuthProvider'
 import { FinanceProvider } from './context/FinanceProvider'
 import { ToastProvider } from './components/ui/Toast'
 import { AuthGate } from './auth/AuthGate'
@@ -22,24 +23,26 @@ function ScrollToTop() {
 export default function App() {
   return (
     <HashRouter>
-      <ToastProvider>
-        <FinanceProvider>
-          <AuthGate>
-            <ScrollToTop />
-            <Routes>
-              <Route element={<AppShell />}>
-                <Route index element={<Dashboard />} />
-                <Route path="transactions" element={<Transactions />} />
-                <Route path="budgets" element={<Budgets />} />
-                <Route path="analytics" element={<Analytics />} />
-                <Route path="recurring" element={<Recurring />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Route>
-            </Routes>
-          </AuthGate>
-        </FinanceProvider>
-      </ToastProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <FinanceProvider>
+            <AuthGate>
+              <ScrollToTop />
+              <Routes>
+                <Route element={<AppShell />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="transactions" element={<Transactions />} />
+                  <Route path="budgets" element={<Budgets />} />
+                  <Route path="analytics" element={<Analytics />} />
+                  <Route path="recurring" element={<Recurring />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Route>
+              </Routes>
+            </AuthGate>
+          </FinanceProvider>
+        </ToastProvider>
+      </AuthProvider>
     </HashRouter>
   )
 }

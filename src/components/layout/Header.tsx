@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Menu } from 'lucide-react'
 import { NAV_ITEMS } from '../../constants'
 import { useFinance } from '../../context/FinanceContext'
+import { useAuth } from '../../auth/AuthContext'
 import { GlobalSearch } from './GlobalSearch'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -21,8 +22,11 @@ function getInitials(name: string): string {
 
 export function Header({ onOpenMobileNav }: HeaderProps) {
   const { settings } = useFinance()
+  const { profile } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
+
+  const displayName = profile?.name || settings.name
 
   const currentLabel =
     NAV_ITEMS.find((item) =>
@@ -56,7 +60,7 @@ export function Header({ onOpenMobileNav }: HeaderProps) {
           aria-label="Open profile settings"
           className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-soft text-sm font-semibold text-brand transition-colors hover:ring-2 hover:ring-brand/30"
         >
-          {getInitials(settings.name)}
+          {getInitials(displayName)}
         </button>
       </div>
     </header>

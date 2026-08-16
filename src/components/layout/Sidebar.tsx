@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { CircleHelp, LogIn, Wallet } from 'lucide-react'
+import { CircleHelp, Lock, LogIn, Wallet } from 'lucide-react'
 import { NAV_ITEMS, APP_NAME, SYNC_STATUS_META } from '../../constants'
 import { useFinance } from '../../context/FinanceContext'
+import { useAuth } from '../../auth/AuthContext'
 import { ThemeToggle } from './ThemeToggle'
 import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
@@ -24,7 +25,9 @@ function getInitials(name: string): string {
 
 export function Sidebar({ onNavigate }: SidebarProps) {
   const { settings, syncStatus, syncNow } = useFinance()
+  const { profile, lock } = useAuth()
   const [helpOpen, setHelpOpen] = useState(false)
+  const displayName = profile?.name || settings.name
 
   return (
     <div className="flex h-full flex-col">
@@ -93,20 +96,31 @@ export function Sidebar({ onNavigate }: SidebarProps) {
           <ThemeToggle />
         </div>
 
-        <NavLink
-          to="/settings"
-          onClick={onNavigate}
-          className="flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-surface-2"
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-soft text-sm font-semibold text-brand">
-            {getInitials(settings.name)}
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-medium text-ink">{settings.name}</span>
-            <span className="block text-xs text-ink-muted">View settings</span>
-          </span>
-          <LogIn className="h-4 w-4 shrink-0 text-ink-muted" aria-hidden="true" />
-        </NavLink>
+        <div className="flex items-center gap-2">
+          <NavLink
+            to="/settings"
+            onClick={onNavigate}
+            className="flex min-w-0 flex-1 items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-surface-2"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-soft text-sm font-semibold text-brand">
+              {getInitials(displayName)}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-sm font-medium text-ink">{displayName}</span>
+              <span className="block text-xs text-ink-muted">View settings</span>
+            </span>
+            <LogIn className="h-4 w-4 shrink-0 text-ink-muted" aria-hidden="true" />
+          </NavLink>
+          <button
+            type="button"
+            onClick={lock}
+            title="Lock Finora"
+            aria-label="Lock Finora"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border text-ink-soft transition-colors hover:bg-surface-2 hover:text-ink"
+          >
+            <Lock className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
       </div>
 
       <Modal

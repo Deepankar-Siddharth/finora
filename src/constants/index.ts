@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react'
 import { Wallet, PlusCircle, PiggyBank, BarChart3, Repeat, Settings } from 'lucide-react'
-import type { SyncStatus } from '../types'
+import type { SyncStatus } from '../types/index.ts'
 
 export interface NavItem {
   path: string

@@ -8,7 +8,7 @@ interface PinFieldProps
   error?: string
 }
 
-/** Numeric, password-styled input for the site secret. */
+/** Numeric, password-styled input for PIN entry. */
 export function PinField({ label, value, onChange, error, className = '', id, ...rest }: PinFieldProps) {
   const autoId = useId()
   const inputId = id ?? autoId
