@@ -30,7 +30,15 @@ export function UnlockScreen() {
     e.preventDefault()
     if (lockedOut || busy) return
     setBusy(true)
-    const ok = await verifyPin(pin)
+    let ok: boolean
+    try {
+      ok = await verifyPin(pin)
+    } catch {
+      setBusy(false)
+      setPin('')
+      setError('Something went wrong. Please try again.')
+      return
+    }
     setBusy(false)
     if (!ok) {
       const next = attempts + 1

@@ -25,7 +25,12 @@ export function SetPinScreen() {
     }
     setError('')
     setBusy(true)
-    await setPin(pin)
+    try {
+      await setPin(pin)
+    } catch {
+      setBusy(false)
+      setError('Could not save your PIN on this device. Check your browser settings and try again.')
+    }
   }
 
   return (
