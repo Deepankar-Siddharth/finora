@@ -21,7 +21,7 @@ The live site is built from the `main` branch and deployed to GitHub Pages. Ever
 - **Recurring Transactions** — daily, weekly, monthly or yearly schedules. Generate an occurrence to create a real transaction and advance the next date automatically.
 - **Global Search** — command-style search (Ctrl+K) across descriptions, categories, payment methods and notes, with keyboard navigation.
 - **Data Controls** — export transactions to CSV, import a previously exported CSV with per-row validation, and reset all data (with typed confirmation).
-- **Secret-number gate** — a static 4–6 digit secret (stored in `src/site.config.ts` in this repo) is required on every visit, so the same number works from any device. A 5-attempt cooling period blocks guessing.
+- **Secret-number gate** — a static 4–6 digit secret is required on every visit, so the same number works from any device. A 5-attempt cooling period blocks guessing.
 - **Themes** — light, dark and system mode with no flash of the wrong theme on load.
 - **Local Persistence** — everything is saved to `localStorage`; you start with an empty dashboard and build up your own real data.
 - **Fully Responsive** — desktop, tablet and mobile layouts with an accessible mobile drawer navigation.
@@ -57,7 +57,7 @@ npm install
 npm run dev
 ```
 
-Open the printed local URL (usually `http://localhost:5173`). Every visit asks for the site secret number (defined in `src/site.config.ts`), then opens an empty dashboard — add your real transactions from scratch or use **Settings → Data → Import CSV** to load them from a file.
+Open the printed local URL (usually `http://localhost:5173`). Every visit asks for the site secret number, then opens an empty dashboard — add your real transactions from scratch or use **Settings → Data → Import CSV** to load them from a file.
 
 ## Development
 
@@ -96,7 +96,7 @@ npm run build
 
 ## Data Privacy
 
-Finora is a local-first application. Your financial data is stored **only** in your browser's `localStorage` under keys prefixed with `finora_` (for example `finora_transactions`). The site secret is a fixed value in `src/site.config.ts` — anyone who inspects the published code could find it, so use it only as a casual personal gate, not for anything that needs real security. Nothing is ever uploaded, transmitted or sold — there is no backend and no analytics. Clearing your browser data removes Finora's data; use **Settings → Data → Export CSV** first if you want a backup.
+Finora is a local-first application. Your financial data is stored **only** in your browser's `localStorage` under keys prefixed with `finora_` (for example `finora_transactions`). The site secret is a fixed value — anyone who inspects the published code could find it, so use it only as a casual personal gate, not for anything that needs real security. Nothing is ever uploaded, transmitted or sold — there is no backend and no analytics. Clearing your browser data removes Finora's data; use **Settings → Data → Export CSV** first if you want a backup.
 
 ## Project Structure
 
